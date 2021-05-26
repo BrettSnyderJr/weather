@@ -9,24 +9,13 @@ weatherForm.addEventListener('submit', (e) => {
 
   const zip = document.querySelector('input').value;
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?zip=${encodeURIComponent(
-    zip
-  )}&appid=e83c3a26cc19a0f05c97e5de5aa78ed5&units=imperial`;
+  const url = `/weather?zip=${zip}`;
 
   fetch(url).then((response) => {
     response.json().then((data) => {
       msgSuccess.textContent = '';
       msgError.textContent = '';
-
-      if (data.cod !== 200) {
-        console.log(data.message);
-        msgError.textContent = data.message;
-      } else {
-        const weather = data.weather[0];
-        const temp = data.main;
-
-        msgSuccess.textContent = `Today's weather in ${data.name} feels like ${temp.feels_like} degrees with ${weather.description}`;
-      }
+      msgError.textContent = data.message;
     });
   });
 });

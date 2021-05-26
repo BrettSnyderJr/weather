@@ -4,6 +4,7 @@ const hbs = require('hbs');
 const forecastUtils = require('./utils/forecast');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 // Define paths for express config
 const publicDirectoryPath = path.join(__dirname, '../public');
@@ -38,24 +39,27 @@ app.get('/help', (req, res) => {
   });
 });
 
+// JSON API endpoint
 app.get('/weather', (req, res) => {
-  const address = req.query.address;
+  const zip = req.query.zip;
 
   const resProps = {
     title: 'Weather Search',
     message: '',
+    error: false,
   };
 
-  return res.render('weather', resProps);
-
-  if (!address) {
-    resProps.message = 'Address is required';
-    return res.render('weather', resProps);
+  if (!zip) {
+    resProps.message = 'Zip is required';
+    resProps.error = true;
+    //return res.render('weather', resProps);
+    return res.send(resProps);
   }
 
-  forecastUtils.getForecast(address, (message) => {
+  forecastUtils.getForecast(zip, (message) => {
     resProps.message = message;
-    return res.render('weather', resProps);
+    //return res.render('weather', resProps);
+    return res.send(resProps);
   });
 });
 
@@ -64,8 +68,6 @@ const filterByValue = (array, string) => {
     o.name.toLowerCase().includes(string.toLowerCase())
   );
 };
-
-const hasQueryString = (string) => {};
 
 // ERRORS
 
@@ -84,6 +86,6 @@ app.get('*', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('Server is up!!!');
+app.listen(port, () => {
+  console.log(`Server is up on port ${port}`);
 });
