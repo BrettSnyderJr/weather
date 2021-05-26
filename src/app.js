@@ -42,7 +42,7 @@ app.get('/weather', (req, res) => {
   const address = req.query.address;
 
   const resProps = {
-    title: 'Weather',
+    title: 'Weather Search',
     message: '',
   };
 
